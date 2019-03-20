@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Updated Google Sign-In -->
+<!--  Step 1: Include the below scripts in login.html <head>..</head> tag -->
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+<script>
+  function start() {
+    gapi.load('auth2', function() {
+      auth2 = gapi.auth2.init({
+        client_id: '167235848691-bus20j63bnlc3lr4g7c5rcalbhadat3q.apps.googleusercontent.com'
+      });
+    });
+  }
+</script>
+<!--  Step 2: In the <body> tag, add the below button and div -->
+  <br><br><br>
+<div class="row"> 
+<div class="col-sm-5"></div>
+<div class="col-sm-5">  
+<button id="signinButton" class="btn btn-primary btn-sm" style="height: 60px;font-size: 30px"><i class="fa fa-sign-in">Google Signin</i></button>
+</div>
+</div>  
+<div id="result"></div>
+<!--  Step 3: Add the below script before the ending </body> tag -->
+<script>
+  $('#signinButton').click(function() {
+    function signInCallback(authResult){
+      if (authResult['code']){
+        $('#signinButton').attr('style', 'display: none');
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?state={{STATE}}',
+          headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+          },
+          contentType: 'application/octet-stream; charset=utf-8',
+          success:function(result){
+            $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+                 setTimeout(function() {
+                  window.location.href = "/";
+                 }, 2000);
+          },
+          processData:false,
+          data:authResult['code']
+        });
+      } else{
+        // handle error
+        console.log('There was an error: ' + authResult['error']);
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+      }
+    }
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+{% endblock content %}

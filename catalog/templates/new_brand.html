@@ -1,0 +1,31 @@
+
+{% block title %} {% endblock %}
+{% include 'header.html' %}
+{% extends 'base.html' %}
+{% block content %}
+<div>
+   <main>
+  <div class="container outer col-4">
+    <div class="card card-new mx-auto mt-5 ">
+      <div class="card-header bg-info text-white">
+        <a href="{{url_for('Pj_Brands')}}" class="fa fa-mail-reply-all back text-white btn "> </a>
+         Add New Brand
+       </div>
+      <div class="card-body p-4">
+        <form action="{{url_for('Nw_Brand')}}" method='POST'>
+          <div class="form-group ">
+            <div class="form-row">
+              <div class="col-md-12">
+                <label for="brandName">Brand Name :</label>
+                <input class="form-control" id="brandName" type="text" name="name" placeholder="Enter brand name" required>
+              </div>
+            </div>
+          </div>
+          <input type="submit" class="btn btn-primary btn-block"  value="Add">
+        </form>
+      </div>
+    </div>
+  </div>
+    </main>
+</div>
+{% endblock %}
